@@ -45,7 +45,7 @@ private:
             SendErrReply(pConnector, "cmd error:", "error arg");
             return;
         }
-        SendBulkReply(pConnector, "hello world");
+        SendBulkReply(pConnector, pConnector->argv[1]);
         return;
     }
 
@@ -53,10 +53,9 @@ private:
 
 };
 
-
 int main(int argc, char **argv)
 {
-	xRedisServer xRedis;
+xRedisServer xRedis;
     xRedis.Init();
     xRedis.Start("127.0.0.1", 6379);
 
