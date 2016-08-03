@@ -15,7 +15,7 @@ clean:
 	rm -rf *.o libxredis_server.so libxredis_server.a example/*.o
 
 example: example/xRedisServer.o
-	g++ -o xRedisServer example/xRedisServer.cpp -I../src -I./src -levent -lxredis_server -L./
+	g++ -o xRedisServer example/xRedisServer.cpp -I./src -levent -lxredis_server -L./
 
 
 
