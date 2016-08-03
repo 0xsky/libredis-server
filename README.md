@@ -19,11 +19,11 @@ make
 ```cpp
 #include "../src/xRedisServerLib.h"
 
-class xRedisClient :public xRedisConnectorBase
+class xRedisConnect :public xRedisConnectorBase
 {
 public:
-    xRedisClient();
-    ~xRedisClient();
+    xRedisConnect();
+    ~xRedisConnect();
 private:
 };
 
@@ -50,13 +50,13 @@ private:
         return true;
     }
 
-    void ProcessCmd_get(xRedisClient *pConnector)
+    void ProcessCmd_get(xRedisConnect *pConnector)
     {
         if (2 != pConnector->argc) {
             SendErrReply(pConnector, "cmd error:", "error arg");
             return;
         }
-        SendBulkReply(pConnector, "hello world");
+        SendBulkReply(pConnector, pConnector->argv[1]);
         return;
     }
 
@@ -66,7 +66,7 @@ private:
 
 int main(int argc, char **argv)
 {
-    xRedisServer xRedis;
+xRedisServer xRedis;
     xRedis.Init();
     xRedis.Start("127.0.0.1", 6379);
 
