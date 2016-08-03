@@ -66,7 +66,7 @@ private:
 
 int main(int argc, char **argv)
 {
-xRedisServer xRedis;
+    xRedisServer xRedis;
     xRedis.Init();
     xRedis.Start("127.0.0.1", 6379);
 
@@ -80,7 +80,7 @@ xRedisServer xRedis;
 ```
 ### 相关文档
 
-<p>使用示例 [examples](https://github.com/0xsky/xredis/blob/master/examples) directory for some examples
+<p>使用示例 [examples](https://github.com/0xsky/xredis-server/tree/master/example) directory for some examples
 <p>QQ群: 190107312
 
 <p><p>作者: xSky        
