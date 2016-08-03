@@ -8,11 +8,11 @@
 
 #include "../src/xRedisServerLib.h"
 
-class xRedisClient :public xRedisConnectorBase
+class xRedisConnect :public xRedisConnectorBase
 {
 public:
-    xRedisClient();
-    ~xRedisClient();
+    xRedisConnect();
+    ~xRedisConnect();
 private:
 };
 
@@ -39,7 +39,7 @@ private:
         return true;
     }
 
-    void ProcessCmd_get(xRedisClient *pConnector)
+    void ProcessCmd_get(xRedisConnect *pConnector)
     {
         if (2 != pConnector->argc) {
             SendErrReply(pConnector, "cmd error:", "error arg");
