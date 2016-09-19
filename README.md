@@ -15,6 +15,11 @@ git clone https://github.com/0xsky/xredis-server.git
 cd xredis-server.git
 make
 ```
+###build example
+```bash
+make example
+```
+
 ###usage:
 ```cpp
 #include "../src/xRedisServerLib.h"
