@@ -8,6 +8,7 @@
 
 #include "../src/xRedisServerLib.h"
 
+#include <unistd.h>
 class xRedisConnect :public xRedisConnectorBase
 {
 public:
@@ -55,7 +56,7 @@ private:
 
 int main(int argc, char **argv)
 {
-xRedisServer xRedis;
+    xRedisServer xRedis;
     xRedis.Init();
     xRedis.Start("127.0.0.1", 6379);
 
