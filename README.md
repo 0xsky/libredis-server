@@ -12,7 +12,7 @@ xredis-server requires libevent
 ###install
 ```bash
 git clone https://github.com/0xsky/xredis-server.git
-cd xredis-server.git
+cd xredis-server
 make
 ```
 ###build example
