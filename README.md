@@ -1,3 +1,9 @@
+[![Author](https://img.shields.io/badge/author-@0xsky-blue.svg?style=flat)](http://www.0xsky.net/)
+[![Platform](https://img.shields.io/badge/platform-Linux,%20BSD,%20OS%20X,%20Windows-green.svg?style=flat)](https://github.com/0xsky/xredis-server) 
+[![NoSQL](https://img.shields.io/badge/db-NoSQL-pink.svg?tyle=flat)](https://github.com/0xsky/xredis-server) 
+[![License](https://img.shields.io/badge/license-GPL-yellow.svg?style=flat)](LICENSE)
+
+
 xredis-server
 ======
 
