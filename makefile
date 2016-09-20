@@ -12,7 +12,7 @@ $(COBJ) : %.o : src/%.c
 	gcc -c $< -o $@ -fPIC
 
 clean:
-	rm -rf *.o libxredis_server.so libxredis_server.a example/*.o
+	rm -rf *.o libxredis_server.so libxredis_server.a example/*.o xRedisServer
 
 example: example/xRedisServer.o
 	g++ -o xRedisServer example/xRedisServer.cpp -I./src -levent -lxredis_server -L./
