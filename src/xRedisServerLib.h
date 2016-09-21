@@ -66,6 +66,7 @@ private:
 
 
 class xRedisServerBase;
+
 typedef void (xRedisServerBase::*CmdCallback)(xRedisConnectorBase *pConnector);
 typedef struct _CMD_FUN_ {
     _CMD_FUN_() {

@@ -34,6 +34,9 @@ xRedisConnectorBase::~xRedisConnectorBase()
     FreeArg();
 }
 
+/*
+ * @brief 做一些释放args的操作
+ * */
 bool xRedisConnectorBase::FreeArg()
 {
     for (int i = 0; i < argc; ++i){
@@ -59,6 +62,9 @@ bool xRedisConnectorBase::OnTimer()
     return true;
 }
 
+/*
+ * @brief 设置fd的opt
+ * */
 void xRedisConnectorBase::SetSocketOpt()
 {
     int optval = 1;
@@ -67,6 +73,9 @@ void xRedisConnectorBase::SetSocketOpt()
     }
 }
 
+/*
+ * @brief server的构造函数
+ * */
 xRedisServerBase::xRedisServerBase()
 {
     evbase = event_base_new();
@@ -75,6 +84,9 @@ xRedisServerBase::xRedisServerBase()
     mCmdCount = 0;
 }
 
+/*
+ * @brief server的释放函数
+ * */
 xRedisServerBase::~xRedisServerBase()
 {
     event_base_free(evbase);
@@ -129,6 +141,9 @@ int xRedisServerBase::ParaseData(xRedisConnectorBase *pConnector, const char* pt
     return parased + len + 2;
 }
 
+/*
+ * @brief 真正的业务处理
+ * */
 bool xRedisServerBase::ProcessCmd(xRedisConnectorBase *pConnector)
 {
     pConnector->activetime = time(NULL);
@@ -178,6 +193,9 @@ bool xRedisServerBase::ProcessCmd(xRedisConnectorBase *pConnector)
     return false;
 }
 
+/*
+ * @brief 设置命令处理cb
+ * */
 bool xRedisServerBase::SetCmdTable(const char* cmd, CmdCallback fun)
 {
     if ((NULL == cmd) || (NULL == fun) || (mCmdCount >= CMD_CALLBACK_MAX)) {
@@ -189,6 +207,9 @@ bool xRedisServerBase::SetCmdTable(const char* cmd, CmdCallback fun)
     return true;
 }
 
+/*
+ * @brief 获取命令处理cb
+ * */
 CmdFun * xRedisServerBase::GetCmdProcessFun(const char *cmd)
 {
     CmdFun *iter;
@@ -210,6 +231,9 @@ void xRedisServerBase::DoCmd(xRedisConnectorBase *pConnector)
     pConnector->FreeArg();
 }
 
+/*
+ * @brief 监听cb
+ * */
 void xRedisServerBase::AcceptCallback(evutil_socket_t listener, short event, void *arg)
 {
     class xRedisServerBase *pRedisvr = (class xRedisServerBase *)arg;
@@ -237,6 +261,7 @@ void xRedisServerBase::ReadCallback(struct bufferevent *bev, void *arg)
             break;
         }
 
+        //读取连续的数据
         unsigned char *buffer = evbuffer_pullup(input, total_len);
         if (NULL == buffer) {
             fprintf(stderr, "evbuffer_pullup msg_len failed!\r\n");
@@ -244,6 +269,8 @@ void xRedisServerBase::ReadCallback(struct bufferevent *bev, void *arg)
         }
 
         pConnector->cmdbuffer.append((char*)buffer, total_len);
+
+        //从buffer里移除指定的长度
         if (evbuffer_drain(input, total_len) < 0) {
             fprintf(stderr, "evbuffer_drain failed!\r\n");
             return;
@@ -264,6 +291,9 @@ void xRedisServerBase::WriteCallback(struct bufferevent *bev, void *arg)
     
 }
 
+/*
+ * @brief 超时回调cb
+ * */
 void xRedisServerBase::TimeoutCallback(int fd, short event, void *arg)
 {
     xRedisConnectorBase *pConnector = reinterpret_cast<xRedisConnectorBase*>(arg);
@@ -272,12 +302,16 @@ void xRedisServerBase::TimeoutCallback(int fd, short event, void *arg)
         struct timeval tv;
         evutil_timerclear(&tv);
         tv.tv_sec = TIMEVAL_TIME;
+        //设置timeout
         event_add(&pConnector->evtimer, &tv);
     } else {
         pRedisvr->FreeConnection(pConnector->sid);
     }
 }
 
+/*
+ * @brief event error回调
+ * */
 void xRedisServerBase::ErrorCallback(struct bufferevent *bev, short event, void *arg)
 {
     xRedisConnectorBase *pConnector = reinterpret_cast<xRedisConnectorBase*>(arg);
@@ -301,6 +335,9 @@ void xRedisServerBase::ErrorCallback(struct bufferevent *bev, short event, void 
     pRedisvr->FreeConnection(pConnector->sid);
 }
 
+/*
+ * @brief 启动服务器
+ * */
 bool xRedisServerBase::Start(const char* ip, int port)
 {
     if (BindPort(ip, port)) {
@@ -309,6 +346,9 @@ bool xRedisServerBase::Start(const char* ip, int port)
     return false;
 }
 
+/*
+ * @brief 绑定端口,并且设置监听cb
+ * */
 bool xRedisServerBase::BindPort(const char* ip, int port)
 {
     if (NULL==ip) {
@@ -319,6 +359,8 @@ bool xRedisServerBase::BindPort(const char* ip, int port)
     if (listener<=0){
         return false;
     }
+
+    //设置fd为无阻塞
     evutil_make_socket_nonblocking(listener);
     evutil_make_listen_socket_reuseable(listener);
 
@@ -327,7 +369,7 @@ bool xRedisServerBase::BindPort(const char* ip, int port)
     sin.sin_addr.s_addr = inet_addr(ip);
     sin.sin_port = htons(port);
 
-    if (bind(listener, (struct sockaddr *)&sin, sizeof(sin)) < 0) {
+    if (::bind(listener, (struct sockaddr *)&sin, sizeof(sin)) < 0) {
         return false;
     }
 
@@ -359,6 +401,9 @@ void *xRedisServerBase::Dispatch(void *arg){
     return NULL;
 }
 
+/*
+ * @brief 初始化conn对象
+ * */
 bool xRedisServerBase::MallocConnection(evutil_socket_t skt)
 {
     xRedisConnectorBase *pConnector = new xRedisConnectorBase;
@@ -369,6 +414,8 @@ bool xRedisServerBase::MallocConnection(evutil_socket_t skt)
     pConnector->fd = skt;
     pConnector->xredisvr = this;
     pConnector->sid = sessionbase++;
+
+    //创建一个bufferevent
     pConnector->bev = bufferevent_socket_new(evbase, skt, BEV_OPT_CLOSE_ON_FREE);
     bufferevent_setcb(pConnector->bev, ReadCallback, NULL, ErrorCallback, pConnector);
     pConnector->SetSocketOpt();
@@ -376,16 +423,23 @@ bool xRedisServerBase::MallocConnection(evutil_socket_t skt)
     struct timeval tv;
     tv.tv_sec = TIMEVAL_TIME;
     tv.tv_usec = 0;
+    //设置超时cb
     evtimer_set(&pConnector->evtimer, TimeoutCallback, pConnector);
     event_base_set(evbase, &pConnector->evtimer);
     evtimer_add(&pConnector->evtimer, &tv);
 
+    //开启bufferevent
     bufferevent_enable(pConnector->bev, EV_READ | EV_WRITE | EV_PERSIST);
+
+    //sid用来标示conn,conn就是conn对象
     connectionmap.insert(pair<uint32_t, xRedisConnectorBase*>(pConnector->sid, pConnector));
 
     return true;
 }
 
+/*
+ * @brief 根据sid查找conn对象
+ * */
 xRedisConnectorBase* xRedisServerBase::FindConnection(uint32_t sid)
 {
     std::map<uint32_t, xRedisConnectorBase*>::iterator iter = connectionmap.find(sid);
@@ -396,12 +450,15 @@ xRedisConnectorBase* xRedisServerBase::FindConnection(uint32_t sid)
     }
 }
 
+/*
+ * @brief 做一些释放conn对象的操作
+ * */
 bool xRedisServerBase::FreeConnection(uint32_t sid)
 {
     std::map<uint32_t, xRedisConnectorBase*>::iterator iter = connectionmap.find(sid);
     if (iter == connectionmap.end()) {
         return false;
-    } else {
+    } else {//做一些释放conn对象的操作
         iter->second->FreeArg();
         event_del(&iter->second->evtimer);
         bufferevent_free(iter->second->bev);
@@ -411,12 +468,18 @@ bool xRedisServerBase::FreeConnection(uint32_t sid)
     return true;
 }
 
+/*
+ * @brief 给客户端发送数据
+ * */
 bool xRedisServerBase::SendData(xRedisConnectorBase *pConnector, const char* data, int len)
 {
     int ret = bufferevent_write(pConnector->bev, data, len);
     return (0 == ret);
 }
 
+/*
+ * @brief 给客户端返回应答
+ * */
 int xRedisServerBase::NetPrintf(xRedisConnectorBase *pConnector, const char* fmt, ...)
 {
     char szBuf[256] = { 0 };
@@ -439,6 +502,9 @@ int xRedisServerBase::SendNullReply(xRedisConnectorBase *pConnector)
     return NetPrintf(pConnector, "$-1\r\n");
 }
 
+/*
+ * @brief 发送错误返回
+ * */
 int xRedisServerBase::SendErrReply(xRedisConnectorBase *pConnector, const char *errtype, const char *errmsg)
 {
     return NetPrintf(pConnector, "-%s %s\r\n", errtype, errmsg);
