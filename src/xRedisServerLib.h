@@ -88,6 +88,9 @@ public:
     bool SetCmdTable(const char* cmd, CmdCallback fun);
 
 public:
+    inline pthread_t get_tid(){return tid;}
+
+public:
     int SendStatusReply(xRedisConnectorBase *pConnector, const char* str);
     int SendNullReply(xRedisConnectorBase *pConnector);
     int SendErrReply(xRedisConnectorBase *pConnector, const char *errtype, const char *errmsg);
@@ -124,6 +127,7 @@ private:
     uint32_t    sessionbase;
     CmdFun mCmdTables[CMD_CALLBACK_MAX];
     int    mCmdCount;
+    pthread_t tid;
 };
 
 #endif

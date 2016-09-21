@@ -9,6 +9,7 @@
 #include "../src/xRedisServerLib.h"
 #include <sys/types.h>
 #include <stdlib.h>
+#include <string.h>
 
 using namespace std;
 
@@ -34,7 +35,7 @@ public:
 public:
     bool Init()
     {
-        CmdRegister();
+        CmdRegister();return true;
     }
 
 private:
@@ -42,7 +43,18 @@ private:
     {
         if (!SetCmdTable("get", (CmdCallback)&xRedisServer::ProcessCmd_get)) return false;
         if (!SetCmdTable("del", (CmdCallback)&xRedisServer::ProcessCmd_del)) return false;
+        if (!SetCmdTable("cls", (CmdCallback)&xRedisServer::ProcessCmd_clear)) return false;
         return SetCmdTable("set", (CmdCallback)&xRedisServer::ProcessCmd_set);
+    }
+
+    void ProcessCmd_clear(xRedisConnect *pConnector){
+        if (1 != pConnector->argc) {
+            SendErrReply(pConnector, "cmd error:", "error arg");
+            return;
+        }
+        _storage_clear();
+        SendBulkReply(pConnector, "cleared");
+        return;
     }
 
     void ProcessCmd_del(xRedisConnect *pConnector){
@@ -114,22 +126,33 @@ private:
         for (std::map<string ,void*>::iterator it = _storage.begin(); it != _storage.end() ;++it) {
             free(it->second);
         }
+        _storage.clear();
     }
 
 private:
     std::map<string ,void*> _storage;
 };
 
+static void
+_print_welcome(){
+    fprintf(stdout, "                  " "********************kMemServer******************" "\n"
+                    "                  " "*                                              *" "\n"
+                    "                  " "*                                              *" "\n"
+                    "                  " "*                    Welcome                   *" "\n"
+                    "                  " "*                                              *" "\n"
+                    "                  " "*                                              *" "\n"
+                    "                  " "************************************************" "\n\n\n");
+    fflush(stdout);
+}
+
 int main(int argc, char **argv)
 {
     xRedisServer xRedis;
+    void *r_val;
+
+    _print_welcome();
     xRedis.Init();
     xRedis.Start("127.0.0.1", 7788);
-
-    while (1) {
-        usleep(1000);
-    }
-    
-    return 0;
+    pthread_join(xRedis.get_tid(), &r_val);
 }
 

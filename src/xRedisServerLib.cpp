@@ -386,8 +386,7 @@ bool xRedisServerBase::BindPort(const char* ip, int port)
 
 bool xRedisServerBase::Run()
 {
-    pthread_t pid;
-    int ret = pthread_create(&pid, NULL, Dispatch, evbase);
+    int ret = pthread_create(&tid, NULL, Dispatch, evbase);
     return (0==ret);
 }
 
@@ -512,7 +511,7 @@ int xRedisServerBase::SendErrReply(xRedisConnectorBase *pConnector, const char *
 
 int xRedisServerBase::SendIntReply(xRedisConnectorBase *pConnector, int64_t ret)
 {
-    return NetPrintf(pConnector, ":%" PRId64 "\r\n", ret);
+    return NetPrintf(pConnector, ":%ld" "\r\n", ret);
 }
 
 int xRedisServerBase::SendBulkReply(xRedisConnectorBase *pConnector, const std::string &strResult)
