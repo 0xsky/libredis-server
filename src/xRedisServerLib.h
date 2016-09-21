@@ -66,6 +66,7 @@ private:
 
 
 class xRedisServerBase;
+
 typedef void (xRedisServerBase::*CmdCallback)(xRedisConnectorBase *pConnector);
 typedef struct _CMD_FUN_ {
     _CMD_FUN_() {
@@ -85,6 +86,9 @@ public:
 public:
     bool Start(const char* ip, int port);
     bool SetCmdTable(const char* cmd, CmdCallback fun);
+
+public:
+    inline pthread_t get_tid(){return tid;}
 
 public:
     int SendStatusReply(xRedisConnectorBase *pConnector, const char* str);
@@ -123,6 +127,7 @@ private:
     uint32_t    sessionbase;
     CmdFun mCmdTables[CMD_CALLBACK_MAX];
     int    mCmdCount;
+    pthread_t tid;
 };
 
 #endif

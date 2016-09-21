@@ -80,14 +80,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/chenxiaofeng/learnCpp/xredis-server/CMakeFiles /Users/chenxiaofeng/learnCpp/xredis-server/CMakeFiles/progress.marks
-	$(MAKE) -f CMakeFiles/Makefile2 all
+	cd /Users/chenxiaofeng/learnCpp/xredis-server && $(CMAKE_COMMAND) -E cmake_progress_start /Users/chenxiaofeng/learnCpp/xredis-server/CMakeFiles /Users/chenxiaofeng/learnCpp/xredis-server/example/CMakeFiles/progress.marks
+	cd /Users/chenxiaofeng/learnCpp/xredis-server && $(MAKE) -f CMakeFiles/Makefile2 example/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/chenxiaofeng/learnCpp/xredis-server/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	$(MAKE) -f CMakeFiles/Makefile2 clean
+	cd /Users/chenxiaofeng/learnCpp/xredis-server && $(MAKE) -f CMakeFiles/Makefile2 example/clean
 .PHONY : clean
 
 # The main clean target
@@ -97,98 +97,60 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	$(MAKE) -f CMakeFiles/Makefile2 preinstall
+	cd /Users/chenxiaofeng/learnCpp/xredis-server && $(MAKE) -f CMakeFiles/Makefile2 example/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	$(MAKE) -f CMakeFiles/Makefile2 preinstall
+	cd /Users/chenxiaofeng/learnCpp/xredis-server && $(MAKE) -f CMakeFiles/Makefile2 example/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /Users/chenxiaofeng/learnCpp/xredis-server && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
-#=============================================================================
-# Target rules for targets named xredis_server
+# Convenience name for target.
+example/CMakeFiles/server.dir/rule:
+	cd /Users/chenxiaofeng/learnCpp/xredis-server && $(MAKE) -f CMakeFiles/Makefile2 example/CMakeFiles/server.dir/rule
+.PHONY : example/CMakeFiles/server.dir/rule
 
-# Build rule for target.
-xredis_server: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 xredis_server
-.PHONY : xredis_server
+# Convenience name for target.
+server: example/CMakeFiles/server.dir/rule
 
-# fast build rule for target.
-xredis_server/fast:
-	$(MAKE) -f CMakeFiles/xredis_server.dir/build.make CMakeFiles/xredis_server.dir/build
-.PHONY : xredis_server/fast
-
-#=============================================================================
-# Target rules for targets named server
-
-# Build rule for target.
-server: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 server
 .PHONY : server
 
 # fast build rule for target.
 server/fast:
-	$(MAKE) -f example/CMakeFiles/server.dir/build.make example/CMakeFiles/server.dir/build
+	cd /Users/chenxiaofeng/learnCpp/xredis-server && $(MAKE) -f example/CMakeFiles/server.dir/build.make example/CMakeFiles/server.dir/build
 .PHONY : server/fast
 
-src/sds.o: src/sds.c.o
+xRedisServer.o: xRedisServer.cpp.o
 
-.PHONY : src/sds.o
-
-# target to build an object file
-src/sds.c.o:
-	$(MAKE) -f CMakeFiles/xredis_server.dir/build.make CMakeFiles/xredis_server.dir/src/sds.c.o
-.PHONY : src/sds.c.o
-
-src/sds.i: src/sds.c.i
-
-.PHONY : src/sds.i
-
-# target to preprocess a source file
-src/sds.c.i:
-	$(MAKE) -f CMakeFiles/xredis_server.dir/build.make CMakeFiles/xredis_server.dir/src/sds.c.i
-.PHONY : src/sds.c.i
-
-src/sds.s: src/sds.c.s
-
-.PHONY : src/sds.s
-
-# target to generate assembly for a file
-src/sds.c.s:
-	$(MAKE) -f CMakeFiles/xredis_server.dir/build.make CMakeFiles/xredis_server.dir/src/sds.c.s
-.PHONY : src/sds.c.s
-
-src/xRedisServerLib.o: src/xRedisServerLib.cpp.o
-
-.PHONY : src/xRedisServerLib.o
+.PHONY : xRedisServer.o
 
 # target to build an object file
-src/xRedisServerLib.cpp.o:
-	$(MAKE) -f CMakeFiles/xredis_server.dir/build.make CMakeFiles/xredis_server.dir/src/xRedisServerLib.cpp.o
-.PHONY : src/xRedisServerLib.cpp.o
+xRedisServer.cpp.o:
+	cd /Users/chenxiaofeng/learnCpp/xredis-server && $(MAKE) -f example/CMakeFiles/server.dir/build.make example/CMakeFiles/server.dir/xRedisServer.cpp.o
+.PHONY : xRedisServer.cpp.o
 
-src/xRedisServerLib.i: src/xRedisServerLib.cpp.i
+xRedisServer.i: xRedisServer.cpp.i
 
-.PHONY : src/xRedisServerLib.i
+.PHONY : xRedisServer.i
 
 # target to preprocess a source file
-src/xRedisServerLib.cpp.i:
-	$(MAKE) -f CMakeFiles/xredis_server.dir/build.make CMakeFiles/xredis_server.dir/src/xRedisServerLib.cpp.i
-.PHONY : src/xRedisServerLib.cpp.i
+xRedisServer.cpp.i:
+	cd /Users/chenxiaofeng/learnCpp/xredis-server && $(MAKE) -f example/CMakeFiles/server.dir/build.make example/CMakeFiles/server.dir/xRedisServer.cpp.i
+.PHONY : xRedisServer.cpp.i
 
-src/xRedisServerLib.s: src/xRedisServerLib.cpp.s
+xRedisServer.s: xRedisServer.cpp.s
 
-.PHONY : src/xRedisServerLib.s
+.PHONY : xRedisServer.s
 
 # target to generate assembly for a file
-src/xRedisServerLib.cpp.s:
-	$(MAKE) -f CMakeFiles/xredis_server.dir/build.make CMakeFiles/xredis_server.dir/src/xRedisServerLib.cpp.s
-.PHONY : src/xRedisServerLib.cpp.s
+xRedisServer.cpp.s:
+	cd /Users/chenxiaofeng/learnCpp/xredis-server && $(MAKE) -f example/CMakeFiles/server.dir/build.make example/CMakeFiles/server.dir/xRedisServer.cpp.s
+.PHONY : xRedisServer.cpp.s
 
 # Help Target
 help:
@@ -198,14 +160,10 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... xredis_server"
 	@echo "... server"
-	@echo "... src/sds.o"
-	@echo "... src/sds.i"
-	@echo "... src/sds.s"
-	@echo "... src/xRedisServerLib.o"
-	@echo "... src/xRedisServerLib.i"
-	@echo "... src/xRedisServerLib.s"
+	@echo "... xRedisServer.o"
+	@echo "... xRedisServer.i"
+	@echo "... xRedisServer.s"
 .PHONY : help
 
 
@@ -217,6 +175,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /Users/chenxiaofeng/learnCpp/xredis-server && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 
