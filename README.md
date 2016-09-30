@@ -3,7 +3,7 @@
 [![NoSQL](https://img.shields.io/badge/db-NoSQL-pink.svg?tyle=flat)](https://github.com/0xsky/xredis-server) 
 [![License](https://img.shields.io/badge/license-MIT-yellow.svg?style=flat)](LICENSE)
 
-([中文说明](README_cn.md))
+###[中文说明](README-cn.md)
 xredis-server
 ======
 
