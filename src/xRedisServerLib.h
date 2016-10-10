@@ -86,7 +86,8 @@ public:
 public:
     bool Start(const char* ip, int port);
     bool SetCmdTable(const char* cmd, CmdCallback fun);
-
+    bool SetAuth(std::string &password);
+    
 public:
     int SendStatusReply(xRedisConnectorBase *pConnector, const char* str);
     int SendNullReply(xRedisConnectorBase *pConnector);
@@ -118,9 +119,8 @@ private:
     void DoCmd(xRedisConnectorBase *pConnector);
     CmdFun * GetCmdProcessFun(const char *cmd);
 
-public:
+private:
     friend class xRedisConnectorBase;
-    bool SetAuth(std::string &password);
     bool CheckSession(xRedisConnectorBase *pConnector);
     void ProcessCmd_auth(xRedisConnectorBase *pConnector);
 private:
