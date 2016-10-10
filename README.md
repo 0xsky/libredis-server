@@ -79,7 +79,9 @@ int main(int argc, char **argv)
 {
     xRedisServer xRedis;
     xRedis.Init();
-    xRedis.Start("127.0.0.1", 6379);
+    std::string pass = "123456";
+    xRedis.SetPassword(pass);
+    xRedis.Start("127.0.0.1", 6479);
 
     while (1) {
         usleep(1000);
