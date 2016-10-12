@@ -1,6 +1,6 @@
 /*
 * ----------------------------------------------------------------------------
-* Copyright (c) 2015-2016, xSky <guozhw at gmail dot com>
+* Copyright (c) 2015-2016, xSky <guozhw@gmail.com>
 * All rights reserved.
 * Distributed under GPL license.
 * ----------------------------------------------------------------------------
@@ -27,6 +27,7 @@ xRedisConnectorBase::xRedisConnectorBase()
     argv = NULL;
     argnum = 0;
     parsed = 0;
+    authed = false;
 }
 
 xRedisConnectorBase::~xRedisConnectorBase()
@@ -73,6 +74,7 @@ xRedisServerBase::xRedisServerBase()
     assert(evbase != NULL);
     sessionbase = 1000;
     mCmdCount = 0;
+    bAuth = false;
 }
 
 xRedisServerBase::~xRedisServerBase()
@@ -203,9 +205,15 @@ void xRedisServerBase::DoCmd(xRedisConnectorBase *pConnector)
 {
     CmdFun *cmd = GetCmdProcessFun(pConnector->argv[0]);
     if (cmd) {
-        (this->*cmd->cb)(pConnector);
+        if (CheckSession(pConnector)) {
+            (this->*cmd->cb)(pConnector);
+        }
     } else {
-        SendErrReply(pConnector, pConnector->argv[0], "not suport");
+        if (0 == strcmp(pConnector->argv[0], "auth")) {
+            ProcessCmd_auth(pConnector);
+        } else {
+            SendErrReply(pConnector, pConnector->argv[0], "not suport");
+        }
     }
     pConnector->FreeArg();
 }
@@ -464,5 +472,42 @@ int xRedisServerBase::SendMultiBulkReply(xRedisConnectorBase *pConnector, const 
         SendBulkReply(pConnector, vResult[i]);
     }
     return 0;
+}
+
+bool xRedisServerBase::CheckSession(xRedisConnectorBase *pConnector)
+{
+    bool bRet = (!bAuth) ? true : (pConnector->authed);
+    if (!bRet){
+        SendErrReply(pConnector, "ERR", "operation not permitted");
+    }
+    return bRet;
+}
+
+bool xRedisServerBase::SetAuth(std::string &password)
+{
+    pass = password;
+    bAuth = (password.length() > 0) ? true : false;
+    return bAuth;
+}
+
+void xRedisServerBase::ProcessCmd_auth(xRedisConnectorBase *pConnector)
+{
+    if (2 != pConnector->argc) {
+        SendErrReply(pConnector, "arg error", "argc error");
+        return;
+    }
+
+    if (bAuth) {
+        if (0 == strcmp(pConnector->argv[1], pass.c_str())) {
+            pConnector->authed = true;
+            SendStatusReply(pConnector, "OK");
+        } else {
+            SendErrReply(pConnector, "ERR", "auth failed");
+        }
+        return;
+    }
+
+    SendStatusReply(pConnector, "OK");
+    return;
 }
 

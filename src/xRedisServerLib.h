@@ -1,7 +1,7 @@
 
 /*
 * ----------------------------------------------------------------------------
-* Copyright (c) 2015-2016, xSky <guozhw at gmail dot com>
+* Copyright (c) 2015-2016, xSky <guozhw@gmail.com>
 * All rights reserved.
 * Distributed under GPL license.
 * ----------------------------------------------------------------------------
@@ -62,6 +62,7 @@ private:
     std::string cmdbuffer;
     int argnum;
     int parsed;
+    bool authed;
 };
 
 
@@ -85,7 +86,8 @@ public:
 public:
     bool Start(const char* ip, int port);
     bool SetCmdTable(const char* cmd, CmdCallback fun);
-
+    bool SetAuth(std::string &password);
+    
 public:
     int SendStatusReply(xRedisConnectorBase *pConnector, const char* str);
     int SendNullReply(xRedisConnectorBase *pConnector);
@@ -118,11 +120,17 @@ private:
     CmdFun * GetCmdProcessFun(const char *cmd);
 
 private:
+    friend class xRedisConnectorBase;
+    bool CheckSession(xRedisConnectorBase *pConnector);
+    void ProcessCmd_auth(xRedisConnectorBase *pConnector);
+private:
     struct event_base *evbase;
     std::map<uint32_t, xRedisConnectorBase*> connectionmap;
     uint32_t    sessionbase;
     CmdFun mCmdTables[CMD_CALLBACK_MAX];
     int    mCmdCount;
+    bool bAuth;
+    std::string pass;
 };
 
 #endif
