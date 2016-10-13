@@ -209,7 +209,11 @@ void xRedisServerBase::DoCmd(xRedisConnectorBase *pConnector)
             (this->*cmd->cb)(pConnector);
         }
     } else {
+<<<<<<< HEAD
         if (0 == strcasecmp(pConnector->argv[0], "AUTH")) {
+=======
+        if (0 == strncasecmp(pConnector->argv[0], "auth", 4)) {
+>>>>>>> refs/remotes/origin/master
             ProcessCmd_auth(pConnector);
         } else {
             SendErrReply(pConnector, pConnector->argv[0], "not suport");
