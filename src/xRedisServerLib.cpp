@@ -208,7 +208,7 @@ void xRedisServerBase::DoCmd(xRedisConnectorBase *pConnector)
             (this->*cmd->cb)(pConnector);
         }
     } else {
-        if (0 == strcmp(pConnector->argv[0], "auth")) {
+        if (0 == strncasecmp(pConnector->argv[0], "AUTH",4)) {
             ProcessCmd_auth(pConnector);
         } else {
             SendErrReply(pConnector, pConnector->argv[0], "not suport");
