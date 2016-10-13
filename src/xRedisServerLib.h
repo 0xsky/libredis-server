@@ -86,7 +86,7 @@ public:
 public:
     bool Start(const char* ip, int port);
     bool SetCmdTable(const char* cmd, CmdCallback fun);
-    bool SetAuth(std::string &password);
+    bool SetPassword(std::string &password);
     
 public:
     int SendStatusReply(xRedisConnectorBase *pConnector, const char* str);

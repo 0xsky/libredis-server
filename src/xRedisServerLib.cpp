@@ -11,7 +11,6 @@
 #include <netinet/tcp.h>
 #include <arpa/inet.h>
 #include <errno.h>
-#include <stdlib.h>
 #include <string.h>
 #include "xRedisServerLib.h"
 
@@ -209,7 +208,7 @@ void xRedisServerBase::DoCmd(xRedisConnectorBase *pConnector)
             (this->*cmd->cb)(pConnector);
         }
     } else {
-        if (0 == strncasecmp(pConnector->argv[0], "auth", 4)) {
+        if (0 == strcmp(pConnector->argv[0], "auth")) {
             ProcessCmd_auth(pConnector);
         } else {
             SendErrReply(pConnector, pConnector->argv[0], "not suport");
@@ -483,7 +482,7 @@ bool xRedisServerBase::CheckSession(xRedisConnectorBase *pConnector)
     return bRet;
 }
 
-bool xRedisServerBase::SetAuth(std::string &password)
+bool xRedisServerBase::SetPassword(std::string &password)
 {
     pass = password;
     bAuth = (password.length() > 0) ? true : false;
