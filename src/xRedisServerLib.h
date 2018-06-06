@@ -95,7 +95,7 @@ public:
     int SendIntReply(xRedisConnectorBase *pConnector, int64_t ret);
     int SendBulkReply(xRedisConnectorBase *pConnector, const std::string &vResult);
     int SendMultiBulkReply(xRedisConnectorBase *pConnector, const std::vector<std::string> &vResult);
-
+    int SendMultiBulkStReply(xRedisConnectorBase *pConnector, const std::vector< vector<std::string> > &vResult);
 private:
     bool BindPort(const char* ip, int port);
     bool MallocConnection(evutil_socket_t skt);
