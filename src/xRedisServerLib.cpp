@@ -473,6 +473,16 @@ int xRedisServerBase::SendMultiBulkReply(xRedisConnectorBase *pConnector, const 
     return 0;
 }
 
+int xRedisServerBase::SendMultiBulkStReply(xRedisConnectorBase *pConnector, const std::vector< vector<std::string> > &vResult)
+{
+	size_t iSize = vResult.size();
+	NetPrintf(pConnector, "*%zu\r\n", iSize);
+	for (size_t i = 0; i < iSize; ++i) {
+		SendMultiBulkReply(pConnector, vResult[i]);
+	}
+	return 0;
+}
+
 bool xRedisServerBase::CheckSession(xRedisConnectorBase *pConnector)
 {
     bool bRet = (!bAuth) ? true : (pConnector->authed);
